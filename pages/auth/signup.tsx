@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Router from "next/router";
+import fetch from "isomorphic-unfetch"
 import Layout from "@components/Layout";
 
 const SignUp: React.FC = ( props ) => {
@@ -11,12 +12,21 @@ const SignUp: React.FC = ( props ) => {
         e.preventDefault();
 
         try {
-            const body = { email, password };
+            const body = { name, email, password };
+
+            await fetch('/api/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
+            await Router.push('/');
 
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 
     return (
         <Layout>
