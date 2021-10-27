@@ -53,9 +53,12 @@ const Post: React.FC<PostProps> = (props: InferGetServerSidePropsType<typeof get
   if(status === "loading"){
     return <div>Authenticating ...</div>;
   }
-
-  const userHasValidSession = Boolean(session);
-  const postBelongsToUser = session.user.email === props.author?.email;
+  let userHasValidSession = null;
+  let postBelongsToUser = null;
+  if (session) {
+    userHasValidSession = Boolean(session);
+    postBelongsToUser = session.user.email === props.author?.email;
+  }
 
   let title = props.title
   if (!props.published) {
