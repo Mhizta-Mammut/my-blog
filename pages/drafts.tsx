@@ -4,10 +4,12 @@ import Layout from '@components/Layout';
 import Post, { PostProps } from '@components/Post';
 import { useSession, getSession } from 'next-auth/react';
 import prisma from '@lib/prisma';
+import Draft from './create';
+import DraftContentLoader from '@components/loaders/DraftContentLoader';
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession({ req });
-  console.log(session);
+
   if (!session) {
     res.statusCode = 403;
     return { props: { drafts: [] } };
@@ -35,6 +37,21 @@ type Props = {
 
 const Drafts: React.FC<Props> = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <Layout>
+        <h1>My Drafts</h1>
+        <DraftContentLoader/>
+        {/* <div>
+          Fetching your Draft!
+          <br/>
+          <br/>
+          Please Wait...!
+        </div> */}
+      </Layout>
+    )
+  }
 
   if (!session) {
     return (
